@@ -43,7 +43,7 @@
 <div class="header">
   <div class="header-logo">&#x1F9ED;</div>
   <div class="header-text">
-    <h1>MeseNav</h1>
+    <h1>MeseNaf</h1>
     <p>Tu guia en Mesena 22</p>
   </div>
 </div>
@@ -72,7 +72,7 @@ var SYSTEM_PROMPT = "AQUI VA EL SYSTEM PROMPT - SE RELLENA EN LA FASE 4";
 var chatEl = document.getElementById("chat");
 var inputEl = document.getElementById("input");
 var sendBtn = document.getElementById("sendBtn");
-var history = [];
+var chatHistory = [];
 
 inputEl.addEventListener("input", function() {
   inputEl.style.height = "auto";
@@ -117,12 +117,12 @@ function send() {
   inputEl.style.height = "auto";
   sendBtn.disabled = true;
   addMsg("user", text);
-  history.push({ role: "user", content: text });
+  chatHistory.push({ role: "user", content: text });
   showTyping();
   fetch("/api/chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ model: "claude-haiku-4-5-20251001", max_tokens: 1000, system: SYSTEM_PROMPT, messages: history })
+    body: JSON.stringify({ model: "claude-haiku-4-5-20251001", max_tokens: 1000, system: SYSTEM_PROMPT, messages: chatHistory })
   })
   .then(function(res) { return res.json(); })
   .then(function(data) {
@@ -130,7 +130,7 @@ function send() {
     var t = document.getElementById("typing");
     if (t) t.remove();
     addMsg("assistant", reply);
-    history.push({ role: "assistant", content: reply });
+    chatHistory.push({ role: "assistant", content: reply });
     sendBtn.disabled = false;
     inputEl.focus();
   })
